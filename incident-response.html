@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Security Incident Response Policy — Larimar</title>
+    <meta
+      name="description"
+      content="How Larimar detects, responds to, and reports security incidents affecting the Larimar Decorator app."
+    />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1a1a1a;
+        --muted: #666666;
+        --rule: #e6e6e6;
+        --link: #1a4fd6;
+        --th: #f6f6f7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #14151a;
+          --fg: #e7e7ea;
+          --muted: #9aa0aa;
+          --rule: #2a2c34;
+          --link: #8ab0ff;
+          --th: #1d1f27;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+      }
+      main {
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 48px 20px 96px;
+      }
+      h1 {
+        font-size: 27px;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+      }
+      .meta {
+        color: var(--muted);
+        margin: 0 0 26px;
+        font-size: 15px;
+      }
+      h2 {
+        font-size: 19px;
+        margin: 34px 0 10px;
+        padding-top: 22px;
+        border-top: 1px solid var(--rule);
+      }
+      p {
+        margin: 12px 0;
+      }
+      ul,
+      ol {
+        margin: 12px 0;
+        padding-left: 22px;
+      }
+      li {
+        margin: 6px 0;
+      }
+      a {
+        color: var(--link);
+      }
+      strong {
+        font-weight: 600;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 16px 0;
+        font-size: 15px;
+      }
+      th,
+      td {
+        border: 1px solid var(--rule);
+        padding: 8px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: var(--th);
+        font-weight: 600;
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+      footer {
+        margin-top: 48px;
+        padding-top: 20px;
+        border-top: 1px solid var(--rule);
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Security Incident Response Policy</h1>
+      <p class="meta">
+        Larimar Decorator &middot; Version 1.0 &middot; Effective September 21, 2026
+      </p>
+
+      <p>
+        This policy defines how Larimar Logistics (&ldquo;Larimar&rdquo;) detects, responds to, and
+        learns from security incidents affecting the Larimar Decorator app and the data it processes.
+        Its goals are to limit harm, meet Larimar&rsquo;s legal and contractual notification
+        obligations, and restore normal operation quickly.
+      </p>
+
+      <h2>Scope</h2>
+      <p>This policy covers any event that affects the confidentiality, integrity, or availability of:</p>
+      <ul>
+        <li>
+          Merchant and shopper personal data processed by the App (order data, customer contact and
+          shipping data, shopper design data);
+        </li>
+        <li>the App&rsquo;s code, infrastructure, databases, file storage, secrets, and integrations;</li>
+        <li>staff accounts and credentials with access to the above.</li>
+      </ul>
+      <p>It applies to all Larimar personnel and contractors with access to these systems.</p>
+
+      <h2>Definitions</h2>
+      <ul>
+        <li>
+          <strong>Security event</strong> — an observable occurrence that may have security
+          relevance (an alert, an unexpected error, a failed-login spike). Most events are not
+          incidents.
+        </li>
+        <li>
+          <strong>Security incident</strong> — an event confirmed, or reasonably suspected, to
+          compromise the confidentiality, integrity, or availability of in-scope systems or data.
+        </li>
+        <li>
+          <strong>Personal data breach</strong> — a security incident leading to the accidental or
+          unlawful destruction, loss, alteration, unauthorized disclosure of, or access to personal
+          data.
+        </li>
+      </ul>
+
+      <h2>Roles and responsibilities</h2>
+      <ul>
+        <li>
+          <strong>Incident Response Lead (IRL)</strong> — the engineering owner responsible for the
+          Larimar platform. Owns the response, classifies severity, coordinates responders, and
+          decides on containment and notification. A designated backup covers when the primary is
+          unavailable.
+        </li>
+        <li>
+          <strong>Responders</strong> — engineers who investigate, contain, and remediate under the
+          IRL&rsquo;s direction.
+        </li>
+        <li>
+          <strong>Communications owner</strong> — drafts and sends notifications to merchants,
+          Shopify, regulators, and affected individuals as directed by the IRL (may be the IRL on a
+          small team).
+        </li>
+        <li>
+          <strong>Executive sponsor</strong> — a member of Larimar leadership who approves external
+          notifications and decisions with legal or financial exposure.
+        </li>
+      </ul>
+      <p>
+        Any staff member who discovers a possible incident is responsible for reporting it
+        immediately.
+      </p>
+
+      <h2>Severity classification</h2>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Definition</th>
+              <th>Examples</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SEV-1 (Critical)</strong></td>
+              <td>Confirmed or likely personal data breach, or a full outage / active compromise</td>
+              <td>Unauthorized access to the production database; a leaked production secret; confirmed data exfiltration</td>
+            </tr>
+            <tr>
+              <td><strong>SEV-2 (High)</strong></td>
+              <td>Serious risk contained, or partial service impact, without confirmed data exposure</td>
+              <td>Exploitable vulnerability in production; suspicious access under investigation; a data-scoping defect</td>
+            </tr>
+            <tr>
+              <td><strong>SEV-3 (Low)</strong></td>
+              <td>Limited-impact or suspected event with no evidence of data exposure</td>
+              <td>Isolated malicious traffic blocked; low-risk dependency vulnerability; anomalous but explained activity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>When in doubt, classify <strong>up</strong> and de-escalate later.</p>
+
+      <h2>Detection and reporting</h2>
+      <p>
+        Incidents may be detected through system logs and monitoring, error alerts, Shopify or
+        merchant reports, a sub-processor&rsquo;s notice, or a report from a researcher or member of
+        the public. Any suspected incident is reported immediately to
+        <a href="mailto:security@larimarlogistics.com">security@larimarlogistics.com</a> and to the
+        Incident Response Lead. The IRL acknowledges the report and opens an incident record without
+        undue delay.
+      </p>
+
+      <h2>Response process</h2>
+      <p>For every incident the IRL runs these phases and records each step, with timestamps:</p>
+      <ol>
+        <li><strong>Triage &amp; classify</strong> — confirm it is an incident, assign a severity, assemble responders.</li>
+        <li><strong>Contain</strong> — stop the spread: revoke or rotate compromised credentials and secrets, disable affected access, isolate affected components, or block malicious traffic; preserve evidence where feasible.</li>
+        <li><strong>Eradicate</strong> — remove the root cause: patch the vulnerability, remove unauthorized access, fix the defect.</li>
+        <li><strong>Recover</strong> — restore systems and data from known-good state, verify integrity, confirm normal operation and monitoring.</li>
+        <li><strong>Assess data impact</strong> — determine whether personal data was affected, whose, what categories, and how many records.</li>
+        <li><strong>Notify</strong> — execute the notifications required for the confirmed impact and severity.</li>
+        <li><strong>Close &amp; review</strong> — confirm resolution and hold a post-incident review.</li>
+      </ol>
+
+      <h2>Notification obligations</h2>
+      <ul>
+        <li>
+          <strong>Merchants.</strong> Where a personal data breach affects data Larimar processes on
+          a merchant&rsquo;s behalf, Larimar notifies the affected merchant(s) without undue delay
+          and within <strong>72 hours</strong> of becoming aware, per the Data Processing Addendum,
+          describing the nature of the breach, the categories and approximate numbers affected, the
+          likely consequences, the measures taken, and a contact point. Information may be provided
+          in phases as it becomes known.
+        </li>
+        <li>
+          <strong>Shopify.</strong> Larimar notifies Shopify of a security incident affecting the App
+          or merchant data in line with Shopify&rsquo;s Partner Program and API terms, within the
+          timeframe Shopify requires.
+        </li>
+        <li>
+          <strong>Regulators.</strong> Where Larimar acts as a controller and a breach is likely to
+          result in a risk to individuals, Larimar notifies the competent supervisory authority as
+          required by law. Where Larimar acts as a processor, it supports the merchant&rsquo;s
+          notification.
+        </li>
+        <li>
+          <strong>Affected individuals.</strong> Where required by law, affected individuals are
+          notified — by Larimar where it is the controller, or in support of the merchant where the
+          merchant is the controller.
+        </li>
+      </ul>
+      <p>External notifications are approved by the executive sponsor and, where warranted, reviewed by legal counsel before sending.</p>
+
+      <h2>Evidence and records</h2>
+      <p>
+        For each incident Larimar keeps a record of the timeline, severity, systems and data
+        involved, actions taken, decisions and their rationale, notifications sent, and the outcome.
+        Relevant logs and evidence are preserved for as long as needed for investigation, legal, and
+        regulatory purposes. Records are kept confidential and access is limited.
+      </p>
+
+      <h2>Post-incident review</h2>
+      <p>
+        Within a reasonable period after closing a SEV-1 or SEV-2 incident (target: 10 business
+        days), responders hold a blameless review that identifies the root cause, what worked and
+        what did not, and concrete follow-up actions with owners and due dates. Follow-up actions are
+        tracked to completion and feed back into Larimar&rsquo;s security measures and this policy.
+      </p>
+
+      <h2>Testing and maintenance</h2>
+      <p>
+        This policy is reviewed at least annually and after any significant incident. Larimar
+        periodically exercises the process — for example through a tabletop walkthrough of a
+        realistic scenario — to confirm that roles, contacts, and steps still work, and updates the
+        policy accordingly.
+      </p>
+
+      <h2>Contact</h2>
+      <p class="contact">
+        Security and incident reporting:
+        <a href="mailto:security@larimarlogistics.com">security@larimarlogistics.com</a>
+      </p>
+
+      <footer>Larimar Decorator &middot; Security Incident Response Policy</footer>
+    </main>
+  </body>
+</html>
